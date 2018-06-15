@@ -17,6 +17,12 @@ cmd_subfolder = os.path.realpath(os.path.abspath(os.path.join(
 if cmd_subfolder not in sys.path:
   sys.path.insert(0, cmd_subfolder)
 
+#Import the metrics definitions path.
+metrics_folder = os.path.realpath(os.path.abspath(os.path.join(
+  os.path.split(inspect.getfile(inspect.currentframe()))[0], "../metrics")))
+if metrics_folder not in sys.path:
+  sys.path.insert(0, metrics_folder)
+
 from log import *
 from timer import *
 from definitions import *
@@ -61,8 +67,8 @@ class LMNN(object):
       # Use the last row of the training set as the responses.
       X, y = SplitTrainData(self.dataset)
       try:
-        feat = RealFeatures(self.X.T)
-        labels = MulticlassLabels(y.astype(numpy.float64))
+        feat = RealFeatures(X.T)
+        labels = MulticlassLabels(y.astype(np.float64))
 
         with totalTimer:
           # Get the options for running LMNN.
@@ -74,7 +80,7 @@ class LMNN(object):
           if "maxiter" in options:
             n = int(options.pop("maxiter"))
           else:
-            n = 1000
+            n = 2000
 
           if len(options) > 0:
             Log.Fatal("Unknown parameters: " + str(options))
