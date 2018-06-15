@@ -794,6 +794,70 @@ methods:
                 normalize: True
                 seed: 42
 
+    LMNN:
+        run: ['metric']
+        script: methods/mlpack/lmnn.py
+        format: [csv, txt]
+        datasets:
+            - files: ['datasets/iris_train.csv',
+                      ['datasets/diabetes_X.csv', 'datasets/diabetes_y.csv'],
+                      'datasets/wine.csv', 'datasets/ionosphere.csv',
+                      'datasets/balance_scale.csv', 'datasets/letter_recognition.csv']
+              options:
+                passes: 10
+                range: 25
+                seed: 42
+
+            - files: ['datasets/letter_recognition.csv',
+                      'datasets/shuttle_train.csv', 'datasets/isolet.csv',
+                      'datasets/covtype.csv', 'datasets/corel-histogram.csv',
+                      'datasets/mnist_all.csv', 'datasets/Twitter.csv']
+              options:
+                passes: 3
+                range: 100
+                seed: 42
+
+            - files: ['datasets/iris_train.csv',
+                      ['datasets/diabetes_X.csv', 'datasets/diabetes_y.csv'],
+                      'datasets/wine.csv', 'datasets/ionosphere.csv',
+                      'datasets/balance_scale.csv', 'datasets/letter_recognition.csv']
+              options:
+                passes: 5
+                optimizer: bbsgd
+                seed: 42
+
+            - files: ['datasets/iris_train.csv',
+                      ['datasets/diabetes_X.csv', 'datasets/diabetes_y.csv'],
+                      'datasets/wine.csv', 'datasets/ionosphere.csv',
+                      'datasets/balance_scale.csv', 'datasets/letter_recognition.csv']
+              options:
+                passes: 5
+                optimizer: sgd
+                range: 50
+                step_size: 1e-07
+                seed: 42
+
+            - files: ['datasets/iris_train.csv',
+                      ['datasets/diabetes_X.csv', 'datasets/diabetes_y.csv'],
+                      'datasets/wine.csv', 'datasets/ionosphere.csv',
+                      'datasets/balance_scale.csv', 'datasets/letter_recognition.csv']
+              options:
+                num_targets: 5
+                max_iterations: 2000
+                optimizer: lbfgs
+                seed: 42
+                wolfe: 0.5
+                range: 50
+
+            - files: ['datasets/covtype.csv',
+                      'datasets/shuttle_train.csv', 'datasets/isolet.csv',
+                      'datasets/mnist_all.csv']
+              options:
+                max_iterations: 2000
+                optimizer: lbfgs
+                seed: 42
+                range: 100
+
     HMMTRAIN:
         run: ['metric']
         script: methods/mlpack/hmm_train.py
@@ -2173,6 +2237,19 @@ methods:
                        ['datasets/madelon_X.csv', 'datasets/madelon_y.csv']]
               options:
                 lambda1: 0.01
+
+    LMNN:
+        run: ['metric']
+        script: methods/shogun/lmnn.py
+        format: [csv, txt]
+        datasets:
+            - files: ['datasets/iris_train.csv',
+                      ['datasets/diabetes_X.csv', 'datasets/diabetes_y.csv'],
+                      'datasets/wine.csv', 'datasets/ionosphere.csv',
+                      'datasets/shuttle_train.csv', 'datasets/isolet.csv',
+                      'datasets/covtype.csv', 'datasets/corel-histogram.csv',
+                      'datasets/mnist_all.csv', 'datasets/Twitter.csv',
+                      'datasets/balance_scale.csv', 'datasets/letter_recognition.csv']
 
     QDA:
             run: ['metric','metric']
