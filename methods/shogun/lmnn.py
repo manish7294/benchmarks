@@ -19,6 +19,8 @@ if cmd_subfolder not in sys.path:
 
 from log import *
 from timer import *
+from definitions import *
+from misc import *
 
 import numpy as np
 from modshogun import RealFeatures
@@ -56,12 +58,8 @@ class LMNN(object):
 
       # Load input dataset.
       Log.Info("Loading dataset", self.verbose)
-      if len(self.dataset) == 2:
-          X = self.dataset[0]
-          y = self.dataset[1]
-      else:
-          # Use the last row of the training set as the responses.
-          X, y = SplitTrainData(self.dataset)
+      # Use the last row of the training set as the responses.
+      X, y = SplitTrainData(self.dataset)
       try:
         feat = RealFeatures(self.X.T)
         labels = MulticlassLabels(y.astype(numpy.float64))

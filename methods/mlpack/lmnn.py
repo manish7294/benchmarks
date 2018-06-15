@@ -1,5 +1,5 @@
 '''
-  @file nca.py
+  @file lmnn.py
   @author Manish Kumar
 
   Class to benchmark the mlpack Large Margin Nearest Neighbors method.
@@ -16,8 +16,8 @@ cmd_subfolder = os.path.realpath(os.path.abspath(os.path.join(
 if cmd_subfolder not in sys.path:
   sys.path.insert(0, cmd_subfolder)
 
-from util.log import *
-from util.profiler import *
+from log import *
+from profiler import *
 
 import shlex
 
@@ -52,7 +52,7 @@ class LMNN(object):
     self.debug = debug
 
     # Get description from executable.
-    cmd = shlex.split(self.path + "mlpack_LMNN -h")
+    cmd = shlex.split(self.path + "mlpack_lmnn -h")
     try:
       s = subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=False)
     except Exception as e:

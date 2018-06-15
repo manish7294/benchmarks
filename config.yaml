@@ -800,16 +800,16 @@ methods:
         format: [csv, txt]
         datasets:
             - files: ['datasets/iris_train.csv',
-                      ['datasets/diabetes_X.csv', 'datasets/diabetes_y.csv'],
-                      'datasets/wine.csv', 'datasets/ionosphere.csv',
-                      'datasets/balance_scale.csv', 'datasets/letter_recognition.csv']
+                      'datasets/wine_qual.csv', 'datasets/ionosphere.csv',
+                      'datasets/balance_scale.csv', 'datasets/letter_recognition.csv',
+                      'datasets/diabetes.csv']
               options:
                 passes: 10
                 range: 25
                 seed: 42
 
             - files: ['datasets/letter_recognition.csv',
-                      'datasets/shuttle_train.csv', 'datasets/isolet.csv',
+                      'datasets/shuttle_train.csv', 'datasets/isolet_train.csv',
                       'datasets/covtype.csv', 'datasets/corel-histogram.csv',
                       'datasets/mnist_all.csv', 'datasets/Twitter.csv']
               options:
@@ -818,18 +818,18 @@ methods:
                 seed: 42
 
             - files: ['datasets/iris_train.csv',
-                      ['datasets/diabetes_X.csv', 'datasets/diabetes_y.csv'],
-                      'datasets/wine.csv', 'datasets/ionosphere.csv',
-                      'datasets/balance_scale.csv', 'datasets/letter_recognition.csv']
+                      'datasets/wine_qual.csv', 'datasets/ionosphere.csv',
+                      'datasets/balance_scale.csv', 'datasets/letter_recognition.csv',
+                      'datasets/diabetes.csv']
               options:
                 passes: 5
                 optimizer: bbsgd
                 seed: 42
 
             - files: ['datasets/iris_train.csv',
-                      ['datasets/diabetes_X.csv', 'datasets/diabetes_y.csv'],
-                      'datasets/wine.csv', 'datasets/ionosphere.csv',
-                      'datasets/balance_scale.csv', 'datasets/letter_recognition.csv']
+                      'datasets/wine_qual.csv', 'datasets/ionosphere.csv',
+                      'datasets/balance_scale.csv', 'datasets/letter_recognition.csv',
+                      'datasets/diabetes.csv']
               options:
                 passes: 5
                 optimizer: sgd
@@ -838,8 +838,7 @@ methods:
                 seed: 42
 
             - files: ['datasets/iris_train.csv',
-                      ['datasets/diabetes_X.csv', 'datasets/diabetes_y.csv'],
-                      'datasets/wine.csv', 'datasets/ionosphere.csv',
+                      'datasets/wine_qual.csv', 'datasets/ionosphere.csv',
                       'datasets/balance_scale.csv', 'datasets/letter_recognition.csv']
               options:
                 num_targets: 5
@@ -850,8 +849,8 @@ methods:
                 range: 50
 
             - files: ['datasets/covtype.csv',
-                      'datasets/shuttle_train.csv', 'datasets/isolet.csv',
-                      'datasets/mnist_all.csv']
+                      'datasets/shuttle_train.csv', 'datasets/isolet_train.csv',
+                      'datasets/mnist_all.csv', 'datasets/diabetes.csv']
               options:
                 max_iterations: 2000
                 optimizer: lbfgs
@@ -2243,13 +2242,18 @@ methods:
         script: methods/shogun/lmnn.py
         format: [csv, txt]
         datasets:
-            - files: ['datasets/iris_train.csv',
-                      ['datasets/diabetes_X.csv', 'datasets/diabetes_y.csv'],
-                      'datasets/wine.csv', 'datasets/ionosphere.csv',
-                      'datasets/shuttle_train.csv', 'datasets/isolet.csv',
-                      'datasets/covtype.csv', 'datasets/corel-histogram.csv',
-                      'datasets/mnist_all.csv', 'datasets/Twitter.csv',
-                      'datasets/balance_scale.csv', 'datasets/letter_recognition.csv']
+            - files: [ ['datasets/iris_train.csv'],
+                       ['datasets/diabetes.csv'],
+                       ['datasets/isolet_train.csv'],
+                       ['datasets/wine_qual.csv'],
+                       ['datasets/ionosphere.csv'],
+                       ['datasets/shuttle_train.csv'],
+                       ['datasets/covtype.csv'],
+                       ['datasets/corel-histogram.csv'],
+                       ['datasets/mnist_all.csv'],
+                       ['datasets/Twitter.csv'],
+                       ['datasets/balance_scale.csv'],
+                       ['datasets/letter_recognition.csv']]
 
     QDA:
             run: ['metric','metric']
