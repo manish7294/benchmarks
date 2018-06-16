@@ -1,5 +1,5 @@
 '''
-  @file lmnn.py
+  file lmnn.py
   @author Manish Kumar
 
   Large Margin Nearest Neighbors with shogun.
@@ -30,7 +30,7 @@ from misc import *
 
 import numpy as np
 from modshogun import RealFeatures
-from modshogun import MulticlassLabels
+from modshogun import MulticlassLabels, MulticlassAccuracy
 from modshogun import LMNN as ShogunLMNN
 from modshogun import KNN, KNN_COVER_TREE, EuclideanDistance
 
@@ -50,7 +50,6 @@ class LMNN(object):
     self.verbose = verbose
     self.dataset = dataset
     self.timeout = timeout
-    self.predictions = None
 
   '''
   Use the shogun libary to implement Large Margin Nearest Neighbors.
@@ -99,8 +98,9 @@ class LMNN(object):
 
       # Predict labels.
       distance = prep.get_linear_transform()
-      feat  = RealFeatures(np.dot(distance, X))
-      labels = MulticlassLabels(y)
+      transformedData = np.dot(X, distance.T)
+      feat  = RealFeatures(transformedData.T)
+      labels = MulticlassLabels(y.astype(np.float64))
       dist = EuclideanDistance()
       knn = KNN(1, dist, labels)
       if "k" in options:
@@ -109,10 +109,10 @@ class LMNN(object):
       knn.train(feat)
       knn.set_knn_solver_type(KNN_COVER_TREE)
       pred = knn.apply_multiclass(feat)
-
-      self.predictions = pred.get_int_labels()
-
-      return [time, self.predictions]
+      evaluator = MulticlassAccuracy()
+      accuracy = evaluator.evaluate(pred, labels)
+      print(accuracy)
+      return [time, accuracy]
 
     try:
       return RunLMNNShogun()
@@ -131,15 +131,13 @@ class LMNN(object):
     Log.Info("Perform LMNN.", self.verbose)
 
     results = self.LMNNShogun(options)
-    if results < 0:
-      return results
+    if results[0] < 0:
+      return results[0]
 
     # Datastructure to store the results.
     metrics = {}
+    metrics['Runtime'] = results[0]
+    metrics['Avg Accuracy'] = results[1]
 
-    X, y = SplitTrainData(self.dataset)
-    confusionMatrix = Metrics.ConfusionMatrix(y, self.predictions)
-    metrics['Runtime'] = results
-    metrics['Avg Accuracy'] = Metrics.AverageAccuracy(confusionMatrix)
+    return metrics
 
-    return {'Runtime' : results}

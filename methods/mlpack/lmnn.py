@@ -28,7 +28,7 @@ from definitions import *
 from misc import *
 
 import shlex
-from modshogun import MulticlassLabels, RealFeatures
+from modshogun import MulticlassLabels, RealFeatures, MulticlassAccuracy
 from modshogun import KNN, KNN_COVER_TREE, EuclideanDistance
 
 try:
@@ -208,8 +208,10 @@ class LMNN(object):
 
     # Predict labels.
     distance = LoadDataset("distance.csv")
-    feat  = RealFeatures(np.dot(distance, self.dataset[0]))
-    labels = MulticlassLabels(self.dataset[1])
+    data = np.genfromtxt(self.dataset, delimiter=',')
+    transformedData = np.dot(data[:,:-1], distance.T)
+    feat  = RealFeatures(transformedData.T)
+    labels = MulticlassLabels(data[:, (data.shape[1] - 1)].astype(np.float64))
     dist = EuclideanDistance()
     knn = KNN(1, dist, labels)
     if "num_targets" in options:
@@ -218,10 +220,9 @@ class LMNN(object):
     knn.train(feat)
     knn.set_knn_solver_type(KNN_COVER_TREE)
     pred = knn.apply_multiclass(feat)
-
-    predictions = pred.get_int_labels()
-    confusionMatrix = Metrics.ConfusionMatrix(self.dataset[1], predictions)
-    metrics['Avg Accuracy'] = Metrics.AverageAccuracy(confusionMatrix)
+    evaluator = MulticlassAccuracy()
+    accuracy = evaluator.evaluate(pred, labels)
+    metrics['Avg Accuracy'] = accuracy
 
     return metrics
 
