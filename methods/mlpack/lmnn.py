@@ -16,16 +16,27 @@ cmd_subfolder = os.path.realpath(os.path.abspath(os.path.join(
 if cmd_subfolder not in sys.path:
   sys.path.insert(0, cmd_subfolder)
 
+#Import the metrics definitions path.
+metrics_folder = os.path.realpath(os.path.abspath(os.path.join(
+  os.path.split(inspect.getfile(inspect.currentframe()))[0], "../metrics")))
+if metrics_folder not in sys.path:
+  sys.path.insert(0, metrics_folder)
+
 from log import *
 from profiler import *
+from definitions import *
+from misc import *
 
 import shlex
+from modshogun import MulticlassLabels, RealFeatures
+from modshogun import KNN, KNN_COVER_TREE, EuclideanDistance
 
 try:
   import subprocess32 as subprocess
 except ImportError:
   import subprocess
 
+import numpy as np
 import re
 import collections
 
@@ -193,8 +204,24 @@ class LMNN(object):
 
     if timer != -1:
       metrics['Runtime'] = timer.total_time - timer.saving_data - timer.loading_data
-
       Log.Info(("total time: %fs" % (metrics['Runtime'])), self.verbose)
+
+    # Predict labels.
+    distance = LoadDataset("distance.csv")
+    feat  = RealFeatures(np.dot(distance, self.dataset[0]))
+    labels = MulticlassLabels(self.dataset[1])
+    dist = EuclideanDistance()
+    knn = KNN(1, dist, labels)
+    if "num_targets" in options:
+      knn.set_k(options.pop("num_targets"))
+
+    knn.train(feat)
+    knn.set_knn_solver_type(KNN_COVER_TREE)
+    pred = knn.apply_multiclass(feat)
+
+    predictions = pred.get_int_labels()
+    confusionMatrix = Metrics.ConfusionMatrix(self.dataset[1], predictions)
+    metrics['Avg Accuracy'] = Metrics.AverageAccuracy(confusionMatrix)
 
     return metrics
 

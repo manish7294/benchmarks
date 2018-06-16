@@ -32,6 +32,7 @@ import numpy as np
 from modshogun import RealFeatures
 from modshogun import MulticlassLabels
 from modshogun import LMNN as ShogunLMNN
+from modshogun import KNN, KNN_COVER_TREE, EuclideanDistance
 
 '''
 This class implements the Large Margin Nearest Neighbors benchmark.
@@ -49,6 +50,7 @@ class LMNN(object):
     self.verbose = verbose
     self.dataset = dataset
     self.timeout = timeout
+    self.predictions = None
 
   '''
   Use the shogun libary to implement Large Margin Nearest Neighbors.
@@ -93,7 +95,24 @@ class LMNN(object):
       except Exception as e:
         return -1
 
-      return totalTimer.ElapsedTime()
+      time = totalTimer.ElapsedTime()
+
+      # Predict labels.
+      distance = prep.get_linear_transform()
+      feat  = RealFeatures(np.dot(distance, X))
+      labels = MulticlassLabels(y)
+      dist = EuclideanDistance()
+      knn = KNN(1, dist, labels)
+      if "k" in options:
+        knn.set_k(options.pop("k"))
+
+      knn.train(feat)
+      knn.set_knn_solver_type(KNN_COVER_TREE)
+      pred = knn.apply_multiclass(feat)
+
+      self.predictions = pred.get_int_labels()
+
+      return [time, self.predictions]
 
     try:
       return RunLMNNShogun()
@@ -114,5 +133,13 @@ class LMNN(object):
     results = self.LMNNShogun(options)
     if results < 0:
       return results
+
+    # Datastructure to store the results.
+    metrics = {}
+
+    X, y = SplitTrainData(self.dataset)
+    confusionMatrix = Metrics.ConfusionMatrix(y, self.predictions)
+    metrics['Runtime'] = results
+    metrics['Avg Accuracy'] = Metrics.AverageAccuracy(confusionMatrix)
 
     return {'Runtime' : results}

@@ -2243,7 +2243,6 @@ methods:
         format: [csv, txt]
         datasets:
             - files: [ ['datasets/iris_train.csv'],
-                       ['datasets/diabetes.csv'],
                        ['datasets/isolet_train.csv'],
                        ['datasets/wine_qual.csv'],
                        ['datasets/ionosphere.csv'],
