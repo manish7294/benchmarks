@@ -29,7 +29,7 @@ from misc import *
 
 import shlex
 from modshogun import MulticlassLabels, RealFeatures, MulticlassAccuracy
-from modshogun import KNN, KNN_COVER_TREE, EuclideanDistance
+from modshogun import KNN, EuclideanDistance
 
 try:
   import subprocess32 as subprocess
@@ -214,10 +214,9 @@ class LMNN(object):
     transformedData = np.dot(data[:,:-1], distance.T)
     feat  = RealFeatures(transformedData.T)
     labels = MulticlassLabels(data[:, (data.shape[1] - 1)].astype(np.float64))
-    dist = EuclideanDistance()
+    dist = EuclideanDistance(feat, feat)
     knn = KNN(self.k, dist, labels)
     knn.train(feat)
-    knn.set_knn_solver_type(KNN_COVER_TREE)
     pred = knn.apply_multiclass(feat)
     evaluator = MulticlassAccuracy()
     accuracy = evaluator.evaluate(pred, labels)

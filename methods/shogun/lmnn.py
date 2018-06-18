@@ -32,7 +32,7 @@ import numpy as np
 from modshogun import RealFeatures
 from modshogun import MulticlassLabels, MulticlassAccuracy
 from modshogun import LMNN as ShogunLMNN
-from modshogun import KNN, KNN_COVER_TREE, EuclideanDistance
+from modshogun import KNN, EuclideanDistance
 
 '''
 This class implements the Large Margin Nearest Neighbors benchmark.
@@ -91,7 +91,7 @@ class LMNN(object):
           prep.set_maxiter(n)
           prep.train()
       except Exception as e:
-        return -1
+        return [-1, -1]
 
       time = totalTimer.ElapsedTime()
 
@@ -103,7 +103,6 @@ class LMNN(object):
       dist = EuclideanDistance(feat, feat)
       knn = KNN(self.k, dist, labels)
       knn.train(feat)
-      knn.set_knn_solver_type(KNN_COVER_TREE)
       pred = knn.apply_multiclass(feat)
       evaluator = MulticlassAccuracy()
       accuracy = evaluator.evaluate(pred, labels)
@@ -112,7 +111,7 @@ class LMNN(object):
     try:
       return RunLMNNShogun()
     except timeout_decorator.TimeoutError:
-      return -1
+      return [-1, -1]
 
   '''
   Perform Large Margin Nearest Neighbors. If the method has been successfully
