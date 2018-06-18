@@ -87,7 +87,7 @@ class LMNN(object):
             raise Exception("unknown parameters")
 
           # Perform LMNN.
-          prep = ShogunLMNN(feat, labels, k)
+          prep = ShogunLMNN(feat, labels, self.k)
           prep.set_maxiter(n)
           prep.train()
       except Exception as e:
