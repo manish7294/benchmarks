@@ -61,6 +61,7 @@ class LMNN(object):
     self.path = path
     self.timeout = timeout
     self.debug = debug
+    self.k = 1
 
     # Get description from executable.
     cmd = shlex.split(self.path + "mlpack_lmnn -h")
@@ -101,7 +102,8 @@ class LMNN(object):
     if "optimizer" in options:
       optionsStr = "-O " + str(options.pop("optimizer"))
     if "num_targets" in options:
-      optionsStr = optionsStr + " -k " + str(options.pop("num_targets"))
+      self.k = options.pop("num_targets")
+      optionsStr = optionsStr + " -k " + str(self.k)
     if "regularization" in options:
       optionsStr = optionsStr + " -r " + str(options.pop("regularization"))
     if "tolerance" in options:
@@ -213,16 +215,13 @@ class LMNN(object):
     feat  = RealFeatures(transformedData.T)
     labels = MulticlassLabels(data[:, (data.shape[1] - 1)].astype(np.float64))
     dist = EuclideanDistance()
-    knn = KNN(1, dist, labels)
-    if "num_targets" in options:
-      knn.set_k(options.pop("num_targets"))
-
+    knn = KNN(self.k, dist, labels)
     knn.train(feat)
     knn.set_knn_solver_type(KNN_COVER_TREE)
     pred = knn.apply_multiclass(feat)
     evaluator = MulticlassAccuracy()
     accuracy = evaluator.evaluate(pred, labels)
-    metrics['Avg Accuracy'] = accuracy
+    metrics['Accuracy'] = accuracy
 
     return metrics
 

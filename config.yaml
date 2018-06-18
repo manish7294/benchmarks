@@ -800,37 +800,41 @@ methods:
         format: [csv, txt]
         datasets:
             - files: ['datasets/iris_train.csv',
+                      ['datasets/diabetes_X.csv', 'datasets/diabetes_y.csv'],
                       'datasets/wine_qual.csv', 'datasets/ionosphere.csv',
-                      'datasets/balance_scale.csv', 'datasets/letter_recognition.csv',
-                      'datasets/diabetes.csv']
+                      'datasets/balance_scale.csv', 'datasets/letter_recognition.csv']
               options:
+                num_targets: 5
                 passes: 10
                 range: 25
                 seed: 42
 
             - files: ['datasets/letter_recognition.csv',
+                      ['datasets/diabetes_X.csv', 'datasets/diabetes_y.csv'],
                       'datasets/shuttle_train.csv', 'datasets/isolet_train.csv',
                       'datasets/covtype.csv', 'datasets/corel-histogram.csv',
                       'datasets/mnist_all.csv', 'datasets/Twitter.csv']
               options:
+                num_targets: 3
                 passes: 3
                 range: 100
                 seed: 42
 
             - files: ['datasets/iris_train.csv',
-                      'datasets/wine_qual.csv', 'datasets/ionosphere.csv',
-                      'datasets/balance_scale.csv', 'datasets/letter_recognition.csv',
-                      'datasets/diabetes.csv']
+                      ['datasets/diabetes_X.csv', 'datasets/diabetes_y.csv'],
+                      'datasets/balance_scale.csv', 'datasets/ionosphere.csv']
               options:
+                num_targets: 3
                 passes: 5
                 optimizer: bbsgd
                 seed: 42
 
             - files: ['datasets/iris_train.csv',
+                      ['datasets/diabetes_X.csv', 'datasets/diabetes_y.csv'],
                       'datasets/wine_qual.csv', 'datasets/ionosphere.csv',
-                      'datasets/balance_scale.csv', 'datasets/letter_recognition.csv',
-                      'datasets/diabetes.csv']
+                      'datasets/balance_scale.csv', 'datasets/letter_recognition.csv']
               options:
+                num_targets: 3
                 passes: 5
                 optimizer: sgd
                 range: 50
@@ -838,10 +842,11 @@ methods:
                 seed: 42
 
             - files: ['datasets/iris_train.csv',
+                      ['datasets/diabetes_X.csv', 'datasets/diabetes_y.csv'],
                       'datasets/wine_qual.csv', 'datasets/ionosphere.csv',
                       'datasets/balance_scale.csv', 'datasets/letter_recognition.csv']
               options:
-                num_targets: 5
+                num_targets: 3
                 max_iterations: 2000
                 optimizer: lbfgs
                 seed: 42
@@ -850,8 +855,9 @@ methods:
 
             - files: ['datasets/covtype.csv',
                       'datasets/shuttle_train.csv', 'datasets/isolet_train.csv',
-                      'datasets/mnist_all.csv', 'datasets/diabetes.csv']
+                      'datasets/mnist_all.csv', 'datasets/letter_recognition.csv']
               options:
+                num_targets: 5
                 max_iterations: 2000
                 optimizer: lbfgs
                 seed: 42
@@ -2243,8 +2249,8 @@ methods:
         format: [csv, txt]
         datasets:
             - files: [ ['datasets/iris_train.csv'],
-                       ['datasets/isolet_train.csv'],
                        ['datasets/wine_qual.csv'],
+                       ['datasets/isolet_train.csv'],
                        ['datasets/ionosphere.csv'],
                        ['datasets/shuttle_train.csv'],
                        ['datasets/covtype.csv'],
@@ -2253,6 +2259,8 @@ methods:
                        ['datasets/Twitter.csv'],
                        ['datasets/balance_scale.csv'],
                        ['datasets/letter_recognition.csv']]
+              options:
+                k: 3
 
     QDA:
             run: ['metric','metric']

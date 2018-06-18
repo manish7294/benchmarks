@@ -50,6 +50,7 @@ class LMNN(object):
     self.verbose = verbose
     self.dataset = dataset
     self.timeout = timeout
+    self.k = 1
 
   '''
   Use the shogun libary to implement Large Margin Nearest Neighbors.
@@ -74,9 +75,7 @@ class LMNN(object):
         with totalTimer:
           # Get the options for running LMNN.
           if "k" in options:
-            k = int(options.pop("k"))
-          else:
-            k = 1
+            self.k = int(options.pop("k"))
 
           if "maxiter" in options:
             n = int(options.pop("maxiter"))
@@ -101,17 +100,13 @@ class LMNN(object):
       transformedData = np.dot(X, distance.T)
       feat  = RealFeatures(transformedData.T)
       labels = MulticlassLabels(y.astype(np.float64))
-      dist = EuclideanDistance()
-      knn = KNN(1, dist, labels)
-      if "k" in options:
-        knn.set_k(options.pop("k"))
-
+      dist = EuclideanDistance(feat, feat)
+      knn = KNN(self.k, dist, labels)
       knn.train(feat)
       knn.set_knn_solver_type(KNN_COVER_TREE)
       pred = knn.apply_multiclass(feat)
       evaluator = MulticlassAccuracy()
       accuracy = evaluator.evaluate(pred, labels)
-      print(accuracy)
       return [time, accuracy]
 
     try:
@@ -137,7 +132,7 @@ class LMNN(object):
     # Datastructure to store the results.
     metrics = {}
     metrics['Runtime'] = results[0]
-    metrics['Avg Accuracy'] = results[1]
+    metrics['Accuracy'] = results[1]
 
     return metrics
 
