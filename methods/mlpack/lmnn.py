@@ -28,7 +28,7 @@ from definitions import *
 from misc import *
 
 import shlex
-from modshogun import MulticlassLabels, RealFeatures, MulticlassAccuracy
+from modshogun import MulticlassLabels, RealFeatures
 from modshogun import KNN, EuclideanDistance
 
 try:
@@ -215,12 +215,33 @@ class LMNN(object):
     feat  = RealFeatures(transformedData.T)
     labels = MulticlassLabels(data[:, (data.shape[1] - 1)].astype(np.float64))
     dist = EuclideanDistance(feat, feat)
-    knn = KNN(self.k, dist, labels)
+    knn = KNN(self.k + 1, dist, labels)
     knn.train(feat)
-    pred = knn.apply_multiclass(feat)
-    evaluator = MulticlassAccuracy()
-    accuracy = evaluator.evaluate(pred, labels)
-    metrics['Accuracy'] = accuracy
+    # Get nearest neighbors.
+    NN =  knn.nearest_neighbors()
+    NN = np.delete(NN, 0, 0)
+    # Compute unique labels.
+    uniqueLabels = np.unique(labels)
+    # Keep count correct predictions.
+    count = 0
+    # Normalize labels
+    for i in range(data.shape[0]):
+        for j in range(len(uniqueLabels)):
+            if (labels[i] == uniqueLabels[j]):
+                labels[i] = j
+                break
+
+    for i in range(NN.shape[1]):
+        Map = [0 for x in range(len(uniqueLabels))]
+        for j in range(NN.shape[0]):
+            dist = np.linalg.norm(data[NN[j][i],:] - data[i,:])
+             # Add constant factor of 1 incase two points overlap
+            Map[int(labels[NN[j, i]])] += 1 / (dist + 1)**2
+        maxInd = np.argmax(Map)
+        if (maxInd == labels[i]):
+            count += 1
+
+    metrics['Accuracy'] = (count / NN.shape[1]) * 100
 
     return metrics
 

@@ -30,7 +30,7 @@ from misc import *
 
 import numpy as np
 from modshogun import RealFeatures
-from modshogun import MulticlassLabels, MulticlassAccuracy
+from modshogun import MulticlassLabels
 from modshogun import LMNN as ShogunLMNN
 from modshogun import KNN, EuclideanDistance
 
@@ -101,11 +101,33 @@ class LMNN(object):
       feat  = RealFeatures(transformedData.T)
       labels = MulticlassLabels(y.astype(np.float64))
       dist = EuclideanDistance(feat, feat)
-      knn = KNN(self.k, dist, labels)
+      knn = KNN(self.k + 1, dist, labels)
       knn.train(feat)
-      pred = knn.apply_multiclass(feat)
-      evaluator = MulticlassAccuracy()
-      accuracy = evaluator.evaluate(pred, labels)
+      # Get nearest neighbors.
+      NN =  knn.nearest_neighbors()
+      NN = np.delete(NN, 0, 0)
+      # Compute unique labels.
+      uniqueLabels = np.unique(labels)
+      # Keep count correct predictions.
+      count = 0
+      # Normalize labels
+      for i in range(X.shape[0]):
+          for j in range(len(uniqueLabels)):
+              if (labels[i] == uniqueLabels[j]):
+                  labels[i] = j
+                  break
+
+      for i in range(NN.shape[1]):
+          Map = [0 for x in range(len(uniqueLabels))]
+          for j in range(NN.shape[0]):
+              dist = np.linalg.norm(X[NN[j][i],:] - X[i,:])
+               # Add constant factor of 1 incase two points overlap
+              Map[int(labels[NN[j, i]])] += 1 / (dist + 1)**2
+          maxInd = np.argmax(Map)
+          if (maxInd == labels[i]):
+              count += 1
+
+      accuracy = (count / NN.shape[1]) * 100
       return [time, accuracy]
 
     try:
