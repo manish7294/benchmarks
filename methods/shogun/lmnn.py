@@ -32,7 +32,6 @@ import numpy as np
 from modshogun import RealFeatures
 from modshogun import MulticlassLabels
 from modshogun import LMNN as ShogunLMNN
-from modshogun import KNN, EuclideanDistance
 
 '''
 This class implements the Large Margin Nearest Neighbors benchmark.
@@ -95,40 +94,17 @@ class LMNN(object):
 
       time = totalTimer.ElapsedTime()
 
-      # Predict labels.
+      # Get distance.
       distance = prep.get_linear_transform()
-      transformedData = np.dot(X, distance.T)
-      feat  = RealFeatures(transformedData.T)
-      labels = MulticlassLabels(y.astype(np.float64))
-      dist = EuclideanDistance(feat, feat)
-      knn = KNN(self.k + 1, dist, labels)
-      knn.train(feat)
-      # Get nearest neighbors.
-      NN =  knn.nearest_neighbors()
-      NN = np.delete(NN, 0, 0)
-      # Compute unique labels.
-      uniqueLabels = np.unique(labels)
-      # Keep count correct predictions.
-      count = 0
-      # Normalize labels
-      for i in range(X.shape[0]):
-          for j in range(len(uniqueLabels)):
-              if (labels[i] == uniqueLabels[j]):
-                  labels[i] = j
-                  break
+      dataList = [X, y]
+      accuracy1NN = Metrics.KNNAccuracy(distance, dataList, 1, False)
+      accuracy3NN = Metrics.KNNAccuracy(distance, dataList, 3, False)
+      accuracy3NNDW = Metrics.KNNAccuracy(distance, dataList, 3, True)
+      accuracy5NN = Metrics.KNNAccuracy(distance, dataList, 5, False)
+      accuracy5NNDW = Metrics.KNNAccuracy(distance, dataList, 5, True)
 
-      for i in range(NN.shape[1]):
-          Map = [0 for x in range(len(uniqueLabels))]
-          for j in range(NN.shape[0]):
-              dist = np.linalg.norm(X[NN[j][i],:] - X[i,:])
-               # Add constant factor of 1 incase two points overlap
-              Map[int(labels[NN[j, i]])] += 1 / (dist + 1)**2
-          maxInd = np.argmax(Map)
-          if (maxInd == labels[i]):
-              count += 1
-
-      accuracy = (count / NN.shape[1]) * 100
-      return [time, accuracy]
+      return [time, accuracy1NN, accuracy3NN, accuracy3NNDW,
+          accuracy5NN, accuracy5NNDW]
 
     try:
       return RunLMNNShogun()
@@ -153,7 +129,11 @@ class LMNN(object):
     # Datastructure to store the results.
     metrics = {}
     metrics['Runtime'] = results[0]
-    metrics['Accuracy'] = results[1]
+    metrics['Accuracy_1_NN'] = results[1]
+    metrics['Accuracy_3_NN'] = results[2]
+    metrics['Accuracy_3_NN_DW'] = results[3]
+    metrics['Accuracy_5_NN'] = results[4]
+    metrics['Accuracy_5_NN_DW'] = results[5]
 
     return metrics
 

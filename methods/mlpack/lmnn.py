@@ -28,8 +28,6 @@ from definitions import *
 from misc import *
 
 import shlex
-from modshogun import MulticlassLabels, RealFeatures
-from modshogun import KNN, EuclideanDistance
 
 try:
   import subprocess32 as subprocess
@@ -208,40 +206,16 @@ class LMNN(object):
       metrics['Runtime'] = timer.total_time - timer.saving_data - timer.loading_data
       Log.Info(("total time: %fs" % (metrics['Runtime'])), self.verbose)
 
-    # Predict labels.
+    # Get distance.
     distance = LoadDataset("distance.csv")
     data = np.genfromtxt(self.dataset, delimiter=',')
-    transformedData = np.dot(data[:,:-1], distance.T)
-    feat  = RealFeatures(transformedData.T)
-    labels = MulticlassLabels(data[:, (data.shape[1] - 1)].astype(np.float64))
-    dist = EuclideanDistance(feat, feat)
-    knn = KNN(self.k + 1, dist, labels)
-    knn.train(feat)
-    # Get nearest neighbors.
-    NN =  knn.nearest_neighbors()
-    NN = np.delete(NN, 0, 0)
-    # Compute unique labels.
-    uniqueLabels = np.unique(labels)
-    # Keep count correct predictions.
-    count = 0
-    # Normalize labels
-    for i in range(data.shape[0]):
-        for j in range(len(uniqueLabels)):
-            if (labels[i] == uniqueLabels[j]):
-                labels[i] = j
-                break
 
-    for i in range(NN.shape[1]):
-        Map = [0 for x in range(len(uniqueLabels))]
-        for j in range(NN.shape[0]):
-            dist = np.linalg.norm(data[NN[j][i],:] - data[i,:])
-             # Add constant factor of 1 incase two points overlap
-            Map[int(labels[NN[j, i]])] += 1 / (dist + 1)**2
-        maxInd = np.argmax(Map)
-        if (maxInd == labels[i]):
-            count += 1
-
-    metrics['Accuracy'] = (count / NN.shape[1]) * 100
+    dataList = [data[:,:-1], data[:, (data.shape[1] - 1)]]
+    metrics['Accuracy_1_NN'] = Metrics.KNNAccuracy(distance, dataList, 1, False)
+    metrics['Accuracy_3_NN'] = Metrics.KNNAccuracy(distance, dataList, 3, False)
+    metrics['Accuracy_3_NN_DW'] = Metrics.KNNAccuracy(distance, dataList, 3, True)
+    metrics['Accuracy_5_NN'] = Metrics.KNNAccuracy(distance, dataList, 5, False)
+    metrics['Accuracy_5_NN_DW'] = Metrics.KNNAccuracy(distance, dataList, 5, True)
 
     return metrics
 
