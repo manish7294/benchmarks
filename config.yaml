@@ -800,19 +800,19 @@ methods:
         format: [csv, txt]
         datasets:
             - files: ['datasets/iris_train.csv',
-                      ['datasets/diabetes_X.csv', 'datasets/diabetes_y.csv'],
-                      'datasets/wine_qual.csv', 'datasets/ionosphere.csv',
-                      'datasets/balance_scale.csv', 'datasets/letter_recognition.csv']
+                      'datasets/satellite_train.csv', 'datasets/ionosphere.csv',
+                      'datasets/balance_scale.csv', 'datasets/letter_recognition.csv',
+                      'datasets/oilspill_train.csv', 'datasets/shuttle_train.csv',
+                      'datasets/ecoli_train.csv', 'datasets/vehicle.csv']
               options:
-                num_targets: 5
+                num_targets: 3
                 passes: 10
-                range: 25
+                range: 20
                 seed: 42
 
             - files: ['datasets/letter_recognition.csv',
-                      ['datasets/diabetes_X.csv', 'datasets/diabetes_y.csv'],
                       'datasets/shuttle_train.csv', 'datasets/isolet_train.csv',
-                      'datasets/covtype.csv', 'datasets/corel-histogram.csv',
+                      'datasets/covtype.csv', 'datasets/optdigits_train.csv',
                       'datasets/mnist_all.csv', 'datasets/Twitter.csv']
               options:
                 num_targets: 3
@@ -821,7 +821,7 @@ methods:
                 seed: 42
 
             - files: ['datasets/iris_train.csv',
-                      ['datasets/diabetes_X.csv', 'datasets/diabetes_y.csv'],
+                      'datasets/ecoli_train.csv', 'datasets/vehicle.csv',
                       'datasets/balance_scale.csv', 'datasets/ionosphere.csv']
               options:
                 num_targets: 3
@@ -830,8 +830,8 @@ methods:
                 seed: 42
 
             - files: ['datasets/iris_train.csv',
-                      ['datasets/diabetes_X.csv', 'datasets/diabetes_y.csv'],
-                      'datasets/wine_qual.csv', 'datasets/ionosphere.csv',
+                      'datasets/satellite_train.csv', 'datasets/ionosphere.csv',
+                      'datasets/ecoli_train.csv', 'datasets/vehicle.csv',
                       'datasets/balance_scale.csv', 'datasets/letter_recognition.csv']
               options:
                 num_targets: 3
@@ -842,8 +842,8 @@ methods:
                 seed: 42
 
             - files: ['datasets/iris_train.csv',
-                      ['datasets/diabetes_X.csv', 'datasets/diabetes_y.csv'],
-                      'datasets/wine_qual.csv', 'datasets/ionosphere.csv',
+                      'datasets/satellite_train.csv', 'datasets/ionosphere.csv',
+                      'datasets/ecoli_train.csv', 'datasets/vehicle.csv',
                       'datasets/balance_scale.csv', 'datasets/letter_recognition.csv']
               options:
                 num_targets: 3
@@ -857,7 +857,7 @@ methods:
                       'datasets/shuttle_train.csv', 'datasets/isolet_train.csv',
                       'datasets/mnist_all.csv', 'datasets/letter_recognition.csv']
               options:
-                num_targets: 5
+                num_targets: 3
                 max_iterations: 2000
                 optimizer: lbfgs
                 seed: 42
@@ -2249,16 +2249,17 @@ methods:
         format: [csv, txt]
         datasets:
             - files: [ ['datasets/iris_train.csv'],
-                       ['datasets/wine_qual.csv'],
-                       ['datasets/isolet_train.csv'],
+                       ['datasets/ecoli_train.csv'],
+                       ['datasets/vehicle.csv'],
                        ['datasets/ionosphere.csv'],
                        ['datasets/shuttle_train.csv'],
-                       ['datasets/covtype.csv'],
-                       ['datasets/corel-histogram.csv'],
+                       ['datasets/letter_recognition.csv'],
+                       ['datasets/balance_scale.csv'],
+                       ['datasets/oilspill_train.csv'],
                        ['datasets/mnist_all.csv'],
                        ['datasets/Twitter.csv'],
-                       ['datasets/balance_scale.csv'],
-                       ['datasets/letter_recognition.csv']]
+                       ['datasets/isolet_train.csv'],
+                       ['datasets/covtype.csv']]
               options:
                 k: 3
 
