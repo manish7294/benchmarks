@@ -953,6 +953,21 @@ methods:
                 new_dimensionality: 2
                 scaled: True
 
+    LMNN:
+        run: ['metric']
+        script: methods/matlab/lmnn.py
+        format: [csv, txt]
+        datasets:
+            - files: ['datasets/iris_train.csv',
+                      'datasets/satellite_train.csv', 'datasets/ionosphere.csv',
+                      'datasets/balance_scale.csv', 'datasets/vehicle.csv',
+                      'datasets/oilspill_train.csv', 'datasets/ecoli_train.csv',
+                      'datasets/letter_recognition.csv', 'datasets/shuttle_train.csv',
+                      'datasets/isolet_train.csv', 'datasets/optdigits_train.csv',
+                      'datasets/covtype.csv', 'datasets/mnist_all.csv']
+              options:
+                k: 3
+
     PERCEPTRON:
         run: ['metric']
         script: methods/matlab/perceptron.py
