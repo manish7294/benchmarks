@@ -8,7 +8,7 @@ function lmnn(cmd)
 % corresponding Nx1 vector labels. The metric is returned in M.
 %
 % Required options:
-%     (-i) [string]    Input dataset to perform PLMNNCA on.
+%     (-i) [string]    Input dataset to perform LMNN on.
 % Options:
 %     (-k) [int]       Desired number of targets.
 %
@@ -31,9 +31,9 @@ function lmnn(cmd)
     % Remove the label row.
     X = X(:,1:end-1);
 		
-		% Variable K can't be used
-    %K = regexp(cmd, '.*?-k ([^\s]+)', 'tokens', 'once');
-    %K = str2num(K{1});
+    % Variable K can't be used
+    % K = regexp(cmd, '.*?-k ([^\s]+)', 'tokens', 'once');
+    % K = str2num(K{1});
 
     total_time = tic;
 
