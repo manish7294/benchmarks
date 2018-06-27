@@ -106,8 +106,6 @@ class LMNN(object):
       optionsStr = optionsStr + " -r " + str(options.pop("regularization"))
     if "tolerance" in options:
       optionsStr = optionsStr + " -t " + str(options.pop("tolerance"))
-    if "batch_delta" in options:
-      optionsStr = optionsStr + " -d " + str(options.pop("batch_delta"))
     if "range" in options:
       optionsStr = optionsStr + " -R " + str(options.pop("range"))
     if "step_size" in options:
