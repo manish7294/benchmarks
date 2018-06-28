@@ -850,7 +850,6 @@ methods:
                 max_iterations: 2000
                 optimizer: lbfgs
                 seed: 42
-                wolfe: 0.5
                 range: 50
 
             - files: ['datasets/covtype.csv',

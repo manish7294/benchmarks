@@ -116,10 +116,8 @@ class LMNN(object):
       optionsStr = optionsStr + " -p " + str(options.pop("passes"))
     if "max_iterations" in options:
       optionsStr = optionsStr + " -n " + str(options.pop("max_iterations"))
-    if "num_basis" in options:
-      optionsStr = optionsStr + " -B " + str(options.pop("num_basis"))
-    if "wolfe" in options:
-      optionsStr = optionsStr + " -w " + str(options.pop("wolfe"))
+    if "rank" in options:
+      optionsStr = optionsStr + " -A " + str(options.pop("rank"))
     if "normalize" in options:
       optionsStr = optionsStr + " -N"
       options.pop("normalize")
